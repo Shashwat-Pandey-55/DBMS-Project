@@ -1,0 +1,113 @@
+CREATE DATABASE test;
+USE test;
+-- Create USER table
+CREATE TABLE USER (
+    UserID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(255),
+    UserEmailID VARCHAR(255),
+    Address VARCHAR(255)
+);
+
+-- Create BRANCH table
+CREATE TABLE BRANCH (
+    BranchID INT AUTO_INCREMENT PRIMARY KEY,
+    Location VARCHAR(255)
+);
+
+
+-- Create ACCOUNT table
+CREATE TABLE ACCOUNT (
+	UserID INT,
+    FOREIGN KEY (UserID) REFERENCES USER(UserID),
+    BranchID INT,
+    AccountNumber INT AUTO_INCREMENT PRIMARY KEY,
+    InterestOnSavings DECIMAL(10,2),
+    Balance DECIMAL(10,2),
+    FOREIGN KEY (BranchID) REFERENCES BRANCH(BranchID)
+);
+
+
+
+-- Create 'TRANSACTION' table
+CREATE TABLE TRANSACTIONS (
+    TransactionID INT AUTO_INCREMENT PRIMARY KEY,
+    Type VARCHAR(50),
+    Amount DECIMAL(10,2),
+    Date DATE,
+    AccountNumber INT,
+    FOREIGN KEY (AccountNumber) REFERENCES ACCOUNT(AccountNumber)
+);
+
+-- Create NOTIFICATIONS table
+CREATE TABLE NOTIFICATIONS (
+    NotificationID INT AUTO_INCREMENT PRIMARY KEY,
+    Message VARCHAR(255),
+    UserID INT,
+    FOREIGN KEY (UserID) REFERENCES USER(UserID)
+);
+
+
+-- Create CARD table
+CREATE TABLE CARD (
+    CardID INT AUTO_INCREMENT PRIMARY KEY,
+    AccountNumber INT,
+    `Limit` DECIMAL(10,2),
+    CardType VARCHAR(50),
+    ExpiryDate DATE, 
+    FOREIGN KEY (AccountNumber) REFERENCES ACCOUNT(AccountNumber)
+);
+-- Create STATEMENT table
+CREATE TABLE STATEMENT (
+    StatementID INT AUTO_INCREMENT PRIMARY KEY,
+    TransactionID INT,
+    AccountNumber INT,
+    FOREIGN KEY (TransactionID) REFERENCES TRANSACTIONS(TransactionID),
+    FOREIGN KEY (AccountNumber) REFERENCES ACCOUNT(AccountNumber)
+);
+
+-- Create ADMIN table
+CREATE TABLE ADMIN (
+    AdminID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(255),
+    AdminEmailID VARCHAR(255)
+);
+
+-- Create EMPLOYEE table
+CREATE TABLE EMPLOYEE (
+    EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
+    Designation VARCHAR(255),
+    Name VARCHAR(255),
+    BranchID INT,
+    EmpEmailID VARCHAR(255),
+    FOREIGN KEY (BranchID) REFERENCES BRANCH(BranchID)
+);
+
+-- Create SALARY table
+CREATE TABLE SALARY (
+    SalaryID INT AUTO_INCREMENT PRIMARY KEY,
+    Amount DECIMAL(10,2),
+    AdminID INT,
+    EmployeeID INT UNIQUE,
+    FOREIGN KEY (AdminID) REFERENCES ADMIN(AdminID),
+    FOREIGN KEY (EmployeeID) REFERENCES EMPLOYEE(EmployeeID)
+);
+
+-- Create LOAN table
+CREATE TABLE LOAN (
+    LoanID INT AUTO_INCREMENT PRIMARY KEY,
+    Amount DECIMAL(10,2),
+    StartDate DATE,
+    EndDate DATE,
+    LoanInterest DECIMAL(10,2),
+    AccountNumber INT,
+    FOREIGN KEY (AccountNumber) REFERENCES ACCOUNT(AccountNumber)
+);
+
+-- Create LOCKER table
+CREATE TABLE LOCKER (
+    LockerID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT,
+    BranchID INT,
+    FOREIGN KEY (UserID) REFERENCES USER(UserID),
+    FOREIGN KEY (BranchID) REFERENCES BRANCH(BranchID)
+);
